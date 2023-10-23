@@ -1,5 +1,11 @@
 # 4471_Group14_ProjectDocumentation
 
+## Documentation
+1. progress report 1: https://docs.google.com/presentation/d/1a1noWDl2Q8BtTN-QjLv9B6lB9XAHVoiMkznkSdKGMHo/edit#slide=id.g24fa5f57760_0_5
+2. system preliminary sketch:
+![preliminary scketch](Documentation/preliminary_sketch.png "Preliminary Sketch")
+3. gantt chart: https://app.smartsheet.com/sheets/7V7r996fhwxhQVQmcVPr347QMqv8M8Vcqc3PGw21?view=gantt
+
 ## Local Deploy Test
 1. open multiple terminals, using `python3 user_service.py` to start services
 2. using `python3 client.py` to open an client connect and invoke the service
