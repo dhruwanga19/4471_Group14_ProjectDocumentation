@@ -1,7 +1,7 @@
 # Database Desigg
 ## ERD
 original data have two ways of representing, listed below, we are using the one with only 3 entities as this course does is focused on designing the system.
-![ERD](./stock.drawio.png "database ERD")
+![ERD](./res/stock.drawio.png "database ERD")
 
 ## Data Cleaning
 1. data_preprocessing.ipynb is the jupyter notebook file to perform data cleaning on aapl.csv file
@@ -19,8 +19,8 @@ Steps: \
 2. run command `docker-compose up`
 3. wait for the container to boot up and then **using `docker inspect -f '{{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}' stocks` to get the IP address of the database container**
 4. using pgAdmin (paramaters as follow) to connect to the database
-![database container](./server_parameter.png "pgAdmin paramater")
-![pgAdmin](./pgAdmin.png "pgAdmin")
+![database container](./res/server_parameter.png "pgAdmin paramater")
+![pgAdmin](./res/pgAdmin.png "pgAdmin")
 4. example of using psycopg2 to connect to the database, code save to example_psycopg2.py
 ```python
 db_url = "postgresql://postgres:postgres@172.25.0.1:6543/stocks"
