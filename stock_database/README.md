@@ -45,3 +45,30 @@ df = pd.DataFrame(data, columns=result.keys())
 conn.close()
 ```
 4. using `docker-compose down` to clean the container created
+
+## Create and Deploy database server
+### Local Deploy and Test
+**Database access without message queue**
+1. database_client.py file directly invoke the database execution function
+```bash
+# start database service server
+python database_server.py
+
+# start client program to test and print result
+python database_client.py
+
+# result like this:
+(SOA) ➜  database_server_deploy git:(dev-database) ✗ python database_client.py
+POST request was successful!
+{'transaction_id': 0, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 15869000, 'price': 3450000, 'size': 100, 'sale_condition_codes': '@F', 'suspicious': False}
+{'transaction_id': 1, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 15870000, 'price': 3450100, 'size': 100, 'sale_condition_codes': '@F', 'suspicious': False}
+{'transaction_id': 2, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 16768000, 'price': 3453400, 'size': 100, 'sale_condition_codes': '@F', 'suspicious': False}
+{'transaction_id': 3, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 20357000, 'price': 3455000, 'size': 100, 'sale_condition_codes': '@F', 'suspicious': False}
+{'transaction_id': 4, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 20764000, 'price': 3460000, 'size': 100, 'sale_condition_codes': 'T', 'suspicious': False}
+{'transaction_id': 5, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 20855000, 'price': 3465000, 'size': 100, 'sale_condition_codes': 'T', 'suspicious': False}
+{'transaction_id': 6, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 21546000, 'price': 3458000, 'size': 100, 'sale_condition_codes': '@F', 'suspicious': False}
+{'transaction_id': 7, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 21551000, 'price': 3458000, 'size': 200, 'sale_condition_codes': 'T', 'suspicious': False}
+{'transaction_id': 8, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 21904000, 'price': 3463700, 'size': 100, 'sale_condition_codes': 'T', 'suspicious': False}
+{'transaction_id': 9, 'stock_id': 1, 'exchange_id': 'P', 'day': 1294876800000, 'time_of_the_day': 22024000, 'price': 3463700, 'size': 400, 'sale_condition_codes': 'T', 'suspicious': False}
+```
+
