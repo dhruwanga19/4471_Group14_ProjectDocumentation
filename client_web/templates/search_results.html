@@ -12,7 +12,11 @@
     {% if results %}
         <ul>
             {% for result in results %}
-                <li>{{ result.title }}</li>
+                <li>
+                    <a href="{{ url_for('service_display', service_id=result.service_id) }}">
+                        {{ result.title }}
+                    </a>
+                </li>
             {% endfor %}
         </ul>
     {% else %}

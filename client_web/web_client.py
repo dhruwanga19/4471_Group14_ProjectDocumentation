@@ -30,5 +30,23 @@ def search():
     else:
         return "Error fetching data from the registry server!"
 
+@app.route('/service_display/<int:service_id>')
+def service_display(service_id):
+    # This data can be read from json file int the future
+    subpage_pairs = [
+            {"service_id": 101, "subpage_url":"service101.html"},
+            {"service_id": 102, "subpage_url":"service102.html"},
+            ]
+    subpage_url = None
+    for subpage in subpage_pairs:
+        if subpage.get("service_id") == service_id:
+            subpage_url = subpage.get("subpage_url")
+            break
+
+    if subpage_url is not None:
+        return render_template(subpage_url)
+    else:
+        return f"Subpage for service: {service_id} not found!"
+
 if __name__ == '__main__':
     app.run(debug=True, port=5005)
