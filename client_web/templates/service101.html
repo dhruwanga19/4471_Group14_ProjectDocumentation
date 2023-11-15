@@ -8,6 +8,29 @@
 </head>
 <body>
     <h1>Service 101 Page</h1>
+    <h1>Stock Overall performance</h1>
+    <button id="getImageBtn">Get Overall Performance</button>
+    <div id="imageContainer"></div>
+    <script>
+        document.getElementById('getImageBtn').addEventListener('click', function() {
+            // replace the below ip address with registry server query result
+            const serverUrl = 'http://127.0.0.1:5011';
+            // send POST request to get image
+            fetch(`${serverUrl}/get_stock_plot`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // display data on the page
+                    var imageContainer = document.getElementById('imageContainer');
+                    imageContainer.innerHTML = '<img src="data:image/jpeg;base64,' + data.image + '" alt="Image">';
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
     <p><a href="/">Back to home</a></p>
 </body>
 </html>
