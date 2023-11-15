@@ -41,7 +41,7 @@ def generate_plot():
 def get_stock_plot():
     try:
         # get json data, which contains stock name, time frame
-        # json_data = request.json
+        json_data = request.json
         # print(json_data)
 
         # fake data from database
