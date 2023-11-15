@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group14 Service 101</title>
+</head>
+<body>
+    <h1>Service 101 Page</h1>
+    <h1>Stock Overall performance</h1>
+    <label for="stockName">Stock Name</label>
+    <input type="text" id="stockName" placeholder="Enter Stock Name">
+    <label for="datePicker">Date Start:</label>
+    <input type="date" id="startDatePicker" min="2011-01-01" max="2011-01-03">
+    <label for="datePicker">Date End:</label>
+    <input type="date" id="endDatePicker" min="2011-01-01" max="2011-01-03">
+    <button id="getImageBtn">Get Overall Performance</button>
+    <div id="imageContainer"></div>
+    <script>
+        document.getElementById('getImageBtn').addEventListener('click', function() {
+            // get the input value
+            const stockName = document.getElementById('stockName').value;
+            const startDate = document.getElementById('startDatePicker').value;
+            const endDate = document.getElementById('endDatePicker').value;
+            // construct the reque data
+            const requestData = {
+                stockName: stockName,
+                stockDate: startDate,
+                endData: endDate
+            };
+            // replace the below ip address with registry server query result
+            const serverUrl = 'http://127.0.0.1:5011';
+            // send POST request to get image
+            fetch(`${serverUrl}/get_stock_plot`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // display data on the page
+                    var imageContainer = document.getElementById('imageContainer');
+                    imageContainer.innerHTML = '<img src="data:image/jpeg;base64,' + data.image + '" alt="Image">';
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+    <p><a href="/">Back to home</a></p>
+</body>
+</html>
