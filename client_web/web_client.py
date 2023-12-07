@@ -19,12 +19,27 @@ def search():
 
     # Fetch services from the registry server
     response = requests.get(REGISTRY_API_URL)
-    
+
     if response.status_code == 200:
         data = response.json()
-        return render_template('search_results.html', results=data.get('services'))
+
+        # Filter services based on the keyword
+        filtered_services = filter_services(data.get('services'), keyword)
+
+        return render_template('search_results.html', results=filtered_services)
     else:
         return "Error fetching data from the registry server!"
+
+# Function to filter services based on the keyword
+def filter_services(services, keyword):
+    filtered_services = []
+    for service in services:
+        # Check if the lowercase keyword is in any of the lowercase service attributes
+        if keyword.lower() in service['service_name'].lower() or \
+           keyword.lower() in service['service_description'].lower() or \
+           keyword.lower() in service['service_type'].lower():
+            filtered_services.append(service)
+    return filtered_services
 
 @app.route('/service_display/<string:service_name>')
 def service_display(service_name):
