@@ -67,14 +67,28 @@ def generate_plot(df):
 
     return img_base64
 
-def query_transaction_data():
-    sql_query = text("SELECT * FROM stock.\"Transactions\" ORDER BY transaction_id ASC LIMIT 1000")
+def query_transaction_data(stock_name, start_date, end_date):
+    # Parameters for the SQL query
+    # start_date_int = pd.to_datetime(start_date).timestamp() * 1000
+    # end_date_int = pd.to_datetime(end_date).timestamp() * 1000
+    # Parameters for the SQL query
+    # Adjust the SQL query based on your database schema
+    sql_query = text(f"""
+        SELECT *
+        FROM stock."Transactions"
+        WHERE stock_id = (SELECT id FROM stock."Stocks" WHERE name = '{stock_name}')
+          AND day + (time_of_the_day * INTERVAL '1 millisecond') BETWEEN '{start_date}' AND '{end_date}'
+        ORDER BY transaction_id ASC
+        LIMIT 1000
+    """)
+
     data = {
-        "sql_query": str(sql_query)
+        "sql_query": str(sql_query),
     }
     data_json = json.dumps(data)
+
     db_service_url = "http://54.174.175.123:8504"
-    url = db_service_url + "/database/query"  # this should be replace by registry query result
+    url = db_service_url + "/database/query"  # This should be replaced by registry query result
 
     # Set the Content-Type header to specify JSON data
     headers = {'Content-Type': 'application/json'}
@@ -82,19 +96,18 @@ def query_transaction_data():
 
     if response.status_code == 200:
         print('POST request was successful!')
-        # before usage, the json string need to be convert to json object
+        # Before usage, the JSON string needs to be converted to a JSON object
         result_text = response.text
         result_json = json.loads(result_text)
         df = pd.DataFrame(result_json)
-        df['day'] = pd.to_datetime(df['day'], unit='ms')
         df['time_of_the_day'] = pd.to_timedelta(df['time_of_the_day'], unit='ms')
+        print("finsihed!")
 
         return df
     else:
         print('POST request failed with status code:', response.status_code)
         return None
 
-# Register the service
 def register_service():
     service_data = {
         "service_name": "Service101",
@@ -165,16 +178,27 @@ schedule.every(4).seconds.do(send_heartbeat)
 @app.route('/get_stock_plot', methods=['POST'])
 def get_stock_plot():
     try:
-        # get json data, which contains stock name, time frame
+        # Get JSON data, which contains stock name, time frame
         json_data = request.json
 
-        # fake data from database
-        df = query_transaction_data()
+        # Extract stock name and time frame from the JSON data
+        stock_name = json_data.get('stock_name')
+        start_date = json_data.get('start_date')
+        end_date = json_data.get('end_date')
+
+        # Query transaction data based on input values
+        df = query_transaction_data(stock_name, start_date, end_date)
+
         if df is not None:
-            # generate plot
+            # Generate plot
+            print("!!!!!!!!!!!!data frame get from tranction db")
+            print(df.head())
             img_base64 = generate_plot(df)
 
-        return jsonify({'image': img_base64})
+            return jsonify({'image': img_base64})
+        else:
+            return jsonify({'error': 'No data found for the specified parameters.'}), 404
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

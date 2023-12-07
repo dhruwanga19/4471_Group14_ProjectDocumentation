@@ -9,13 +9,32 @@
 <body>
     <h1>Service 101 Page</h1>
     <h1>Stock Overall performance</h1>
-    <label for="stockName">Stock Name</label>
-    <input type="text" id="stockName" placeholder="Enter Stock Name">
-    <label for="datePicker">Date Start:</label>
-    <input type="date" id="startDatePicker" min="2011-01-01" max="2011-01-03">
-    <label for="datePicker">Date End:</label>
-    <input type="date" id="endDatePicker" min="2011-01-01" max="2011-01-03">
-    <button id="getImageBtn">Get Overall Performance</button>
+    <!-- Stock Name -->
+    <div>
+        <label for="stockName">Stock Name:</label>
+        <select id="stockName">
+            <option value="aapl">Apple (AAPL)</option>
+            <option value="intl">Intel (INTL)</option>
+            <option value="amd">AMD (AMD)</option>
+        </select>
+    </div>
+
+    <!-- Date Start with Time -->
+    <div>
+        <label for="startDatePicker">Date Start:</label>
+        <input type="datetime-local" id="startDatePicker" min="2011-01-13T00:00" max="2011-01-13T23:59">
+    </div>
+
+    <!-- Date End with Time -->
+    <div>
+        <label for="endDatePicker">Date End:</label>
+        <input type="datetime-local" id="endDatePicker" min="2011-01-13T00:00" max="2011-01-13T23:59">
+    </div>
+
+    <!-- Get Overall Performance Button -->
+    <div>
+        <button id="getImageBtn">Get Overall Performance</button>
+    </div>
     <div id="imageContainer"></div>
     <script>
         document.getElementById('getImageBtn').addEventListener('click', function() {
@@ -23,11 +42,11 @@
             const stockName = document.getElementById('stockName').value;
             const startDate = document.getElementById('startDatePicker').value;
             const endDate = document.getElementById('endDatePicker').value;
-            // construct the reque data
+            // construct the request data
             const requestData = {
-                stockName: stockName,
-                stockDate: startDate,
-                endData: endDate
+                stock_name: stockName,
+                start_date: startDate,
+                end_date: endDate
             };
 
              // Send a request to the service registry to get the provider URL for the specified service
