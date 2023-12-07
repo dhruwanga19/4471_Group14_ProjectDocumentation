@@ -1,21 +1,19 @@
-# First Docker Compose file
+# Second Docker Compose file
 version: '3'
 
 services:
-  stock_postgres:
+  registry_postgres:
     image: postgres
-    container_name: stocks
+    container_name: registry
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: stocks
+      POSTGRES_DB: registry_db
     ports:
-      - "6543:5432"
+      - "5543:5432"
     volumes:
-      - ./csv:/csv
       - ./init-scripts:/docker-entrypoint-initdb.d
     restart: unless-stopped
 
 volumes:
-  stock_db_postgres_data:
-
+  registry_postgres_data:

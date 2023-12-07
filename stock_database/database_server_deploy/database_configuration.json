@@ -2,6 +2,6 @@
     "user": "postgres",
     "password": "postgres",
     "database": "stocks",
-    "ip": "172.25.0.1",
+    "ip": "54.174.175.123",
     "port": "6543"
 }

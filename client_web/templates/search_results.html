@@ -13,8 +13,8 @@
         <ul>
             {% for result in results %}
                 <li>
-                    <a href="{{ url_for('service_display', service_id=result.service_id) }}">
-                        {{ result.title }}
+                    <a href="{{ url_for('service_display', service_name=result.service_name) }}">
+                        {{ result.service_name }}
                     </a>
                 </li>
             {% endfor %}

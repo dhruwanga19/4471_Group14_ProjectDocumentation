@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request
 import requests
 
+DEFAULT_PORT = 5005
+
 app = Flask(__name__)
 
-# backend request url
-API_URL = "https://jsonplaceholder.typicode.com/posts"
+# Registry server endpoint for services
+SERVER_IP = "http://54.174.175.123"
+REGISTRY_API_URL = SERVER_IP + ":8511/services"
 
 @app.route('/')
 def index():
@@ -14,39 +17,39 @@ def index():
 def search():
     keyword = request.form.get('keyword')
 
-    response = requests.get(API_URL, params={'q': keyword})
-
+    # Fetch services from the registry server
+    response = requests.get(REGISTRY_API_URL)
+    
     if response.status_code == 200:
         data = response.json()
-        # Add fake json data
-        fake_data = [
-                {"service_id": 101, "title": "stock overtime performance check", "ip": "127.0.0.1", "port":"5009"},
-                {"service_id": 102, "title": "stock notifications", "ip": "127.0.0.1", "port":"5010"},
-        ]
-
-        # Uncomment the line below to use fake data for testing
-        return render_template('search_results.html', results=fake_data)
-        return render_template('search_results.html', results=data)
+        return render_template('search_results.html', results=data.get('services'))
     else:
         return "Error fetching data from the registry server!"
 
-@app.route('/service_display/<int:service_id>')
-def service_display(service_id):
-    # This data can be read from json file int the future
-    subpage_pairs = [
-            {"service_id": 101, "subpage_url":"service101.html"},
-            {"service_id": 102, "subpage_url":"service102.html"},
-            ]
-    subpage_url = None
-    for subpage in subpage_pairs:
-        if subpage.get("service_id") == service_id:
-            subpage_url = subpage.get("subpage_url")
-            break
+@app.route('/service_display/<string:service_name>')
+def service_display(service_name):
+    # Fetch services from the registry server
+    response = requests.get(REGISTRY_API_URL)
 
-    if subpage_url is not None:
-        return render_template(subpage_url)
+    if response.status_code == 200:
+        data = response.json()
+        services = data.get('services')
+        
+        # Find the service with the specified service_name
+        selected_service = next((service for service in services if service['service_name'] == service_name), None)
+        
+        if selected_service:
+            # You can modify this to handle different subpage URLs based on service attributes
+            subpage_url = selected_service.get('service_name', None) + ".html"
+            if subpage_url:
+                return render_template(subpage_url)
+            else:
+                return f"Subpage for service: {service_name} not found!"
+        else:
+            return f"Service with name {service_name} not found!"
     else:
-        return f"Subpage for service: {service_id} not found!"
+        return "Error fetching data from the registry server!"
+
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5005)
+    app.run(debug=True, port=DEFAULT_PORT)

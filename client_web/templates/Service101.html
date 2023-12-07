@@ -29,21 +29,33 @@
                 stockDate: startDate,
                 endData: endDate
             };
-            // replace the below ip address with registry server query result
-            const serverUrl = 'http://127.0.0.1:5011';
-            // send POST request to get image
-            fetch(`${serverUrl}/get_stock_plot`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            })
+
+             // Send a request to the service registry to get the provider URL for the specified service
+            fetch('http://54.174.175.123:8511/get_providers/Service101')
                 .then(response => response.json())
                 .then(data => {
-                    // display data on the page
-                    var imageContainer = document.getElementById('imageContainer');
-                    imageContainer.innerHTML = '<img src="data:image/jpeg;base64,' + data.image + '" alt="Image">';
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    // Use the first provider's IP as the server URL
+                    const serverUrl = data.providers[0].provider_ip;
+                    
+                    // Send POST request to get the image from the provider
+                    fetch(`${serverUrl}/get_stock_plot`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display data on the page
+                        var imageContainer = document.getElementById('imageContainer');
+                        imageContainer.innerHTML = '<img src="data:image/jpeg;base64,' + data.image + '" alt="Image">';
+                    })
+                    .catch(error => console.error('Error:', error));
                 })
                 .catch(error => console.error('Error:', error));
         });
