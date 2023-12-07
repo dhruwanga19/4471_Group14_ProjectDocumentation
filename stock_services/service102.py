@@ -14,6 +14,7 @@ import time
 
 app = Flask(__name__)
 CORS(app)
+
 # Registry server endpoint for service registration
 PORT = 5012  # Change the port for the new service
 REGISTRY_SERVER_IP = "http://54.174.175.123"
@@ -95,6 +96,34 @@ register_service_provider()
 
 # Schedule heartbeat without entering an infinite loop
 schedule.every(4).seconds.do(send_heartbeat)
+
+# Endpoint to handle subscription requests
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    try:
+        data = request.json
+        # Handle the subscription logic here
+        # You can access the data using data['stockName'], data['parameter'], and data['email']
+
+        # Example subscription logic - replace with your actual logic
+        if 'stockName' not in data or 'parameter' not in data or 'email' not in data:
+            raise ValueError("Missing required data in the request")
+
+        subscription_status = f"Subscribed to {data['stockName']} notifications for {data['parameter']} parameter."
+        print(subscription_status)
+
+        # Return a response (replace with your actual response)
+        return jsonify({'message': subscription_status})
+
+    except Exception as e:
+        # Log the error or handle it as needed
+        print(f"Error during subscription: {str(e)}")
+        return jsonify({'error': str(e)}), 500  # Return a 500 Internal Server Error status
+
+# Endpoint to check the status of the provider
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify({'status': 'Provider is running', 'provider_name': 'Service102'})
 
 if __name__ == '__main__':
     import threading

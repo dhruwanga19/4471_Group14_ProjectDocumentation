@@ -11,22 +11,28 @@
     <p>The client can subscribe to notifications through their email to receive notifications of any stock they want to monitor. Consumers can set what parameter they want to monitor, price, size, or performance.</p>
 
     <h2>Subscribe for Stock Notifications</h2>
-    <label for="stockName">Stock Name</label>
-    <select id="stockName">
-        <option value="aapl">Apple (AAPL)</option>
-        <option value="intl">Intel (INTL)</option>
-        <option value="amd">AMD (AMD)</option>
-    </select>
+    <div>
+        <label for="stockName">Stock Name</label>
+        <select id="stockName">
+            <option value="aapl">Apple (AAPL)</option>
+            <option value="intl">Intel (INTL)</option>
+            <option value="amd">AMD (AMD)</option>
+        </select>
+    </div>
 
-    <label for="parameter">Select Parameter to Monitor:</label>
-    <select id="parameter">
-        <option value="price">Price</option>
-        <option value="size">Size</option>
-        <option value="performance">Performance</option>
-    </select>
+    <div>
+        <label for="parameter">Select Parameter to Monitor:</label>
+        <select id="parameter">
+            <option value="price">Price</option>
+            <option value="size">Size</option>
+            <option value="performance">Performance</option>
+        </select>
+    </div>
 
     <label for="email">Email Address</label>
-    <input type="email" id="email" placeholder="Enter Your Email">
+    <div>
+        <input type="email" id="email" placeholder="Enter Your Email">
+    </div>
     
     <button id="subscribeBtn">Subscribe</button>
 
@@ -45,7 +51,7 @@
             };
 
             // Send a request to the service registry to get the provider URL for the specified service
-            fetch('http://54.174.175.123:8511/get_providers/StockNotifications')
+            fetch('http://54.174.175.123:8511/get_providers/Service102')
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
