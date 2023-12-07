@@ -191,8 +191,6 @@ def get_stock_plot():
 
         if df is not None:
             # Generate plot
-            print("!!!!!!!!!!!!data frame get from tranction db")
-            print(df.head())
             img_base64 = generate_plot(df)
 
             return jsonify({'image': img_base64})
@@ -201,6 +199,11 @@ def get_stock_plot():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Endpoint to check the status of the provider
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify({'status': 'Provider is running', 'provider_name': 'Service101'})
 
 if __name__ == '__main__':
     import threading
