@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Exchange Sell Service</title>
+</head>
+<body>
+    <h1>Stock Exchange Sell Service</h1>
+    <p>The client can sell their stocks and receive notifications based on specified parameters. Consumers can choose the type of sell order they want to perform.</p>
+
+    <h2>Sell Stock</h2>
+    <div>
+        <label for="stockName">Stock Name</label>
+        <select id="stockName">
+            <option value="aapl">Apple (AAPL)</option>
+            <option value="intl">Intel (INTL)</option>
+            <option value="amd">AMD (AMD)</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="sellType">Select Type of Sell:</label>
+        <select id="sellType">
+            <option value="market">Market Order</option>
+            <option value="limit">Limit Order</option>
+            <option value="stop">Stop Order</option>
+        </select>
+    </div>
+
+    <label for="email">Email Address</label>
+    <div>
+        <input type="email" id="email" placeholder="Enter Your Email">
+    </div>
+    
+    <button id="sellBtn">Sell</button>
+
+    <script>
+        document.getElementById('sellBtn').addEventListener('click', function() {
+            // get the input values
+            const stockName = document.getElementById('stockName').value;
+            const sellType = document.getElementById('sellType').value;
+            const email = document.getElementById('email').value;
+
+            // construct the request data
+            const requestData = {
+                stockName: stockName,
+                sellType: sellType,
+                email: email
+            };
+
+            // Send a request to the service registry to get the provider URL for the specified service
+            fetch('http://54.174.175.123:8511/get_providers/Service103')  // Assuming Service103 handles stock selling
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    // Use the first provider's IP as the server URL
+                    const serverUrl = data.providers[0].provider_ip;
+                    
+                    // Send POST request to sell stock and receive notifications
+                    fetch(`${serverUrl}/sell`, {  // Update the endpoint to match your actual selling endpoint
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display sell status on the page
+                        alert(data.message);
+                    })
+                    .catch(error => console.error('Error:', error));
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+    <p><a href="/">Back to home</a></p>
+</body>
+</html>
+
