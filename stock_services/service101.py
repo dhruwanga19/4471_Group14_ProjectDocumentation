@@ -18,13 +18,15 @@ CORS(app)
 
 # Registry server endpoint for service registration
 PORT = 5011
-SERVER_IP = "http://54.174.175.123"
-REGISTRY_SERVICES = SERVER_IP + ":8511"
+REGISTRY_SERVER_IP = "http://54.174.175.123"
+REGISTRY_SERVICES = REGISTRY_SERVER_IP + ":8511"
 REGISTRY_SERVICES_API_URL = REGISTRY_SERVICES + "/services"
 REGISTRY_REGISTER_API_URL = REGISTRY_SERVICES + "/register"
 REGISTRY_PROVIDER_API_URL = REGISTRY_SERVICES + "/register/provider"
 REGISTRY_HEARTBEAT_API_URL = REGISTRY_SERVICES + "/heartbeat"
-PROVIDER_IP = SERVER_IP + ":8501"
+
+PROVIDER_SERVER_IP = "http://34.201.71.7"
+PROVIDER_IP = PROVIDER_SERVER_IP + ":8501"
 
 # Fake data
 x = np.linspace(0, 10, 100)
@@ -71,7 +73,7 @@ def query_transaction_data():
         "sql_query": str(sql_query)
     }
     data_json = json.dumps(data)
-    db_service_url = "http://127.0.0.1:5004"
+    db_service_url = "http://54.174.175.123:8504"
     url = db_service_url + "/database/query"  # this should be replace by registry query result
 
     # Set the Content-Type header to specify JSON data
@@ -158,7 +160,7 @@ def register_service_provider():
 register_service_provider()
 
 # Schedule heartbeat without entering an infinite loop
-schedule.every(1).seconds.do(send_heartbeat)
+schedule.every(4).seconds.do(send_heartbeat)
 
 @app.route('/get_stock_plot', methods=['POST'])
 def get_stock_plot():
