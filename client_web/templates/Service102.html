@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Notifications Service</title>
+</head>
+<body>
+    <h1>Stock Notifications Service</h1>
+    <p>The client can subscribe to notifications through their email to receive notifications of any stock they want to monitor. Consumers can set what parameter they want to monitor, price, size, or performance.</p>
+
+    <h2>Subscribe for Stock Notifications</h2>
+    <div>
+        <label for="stockName">Stock Name</label>
+        <select id="stockName">
+            <option value="aapl">Apple (AAPL)</option>
+            <option value="intl">Intel (INTL)</option>
+            <option value="amd">AMD (AMD)</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="parameter">Select Parameter to Monitor:</label>
+        <select id="parameter">
+            <option value="price">Price</option>
+            <option value="size">Size</option>
+            <option value="performance">Performance</option>
+        </select>
+    </div>
+
+    <label for="email">Email Address</label>
+    <div>
+        <input type="email" id="email" placeholder="Enter Your Email">
+    </div>
+    
+    <button id="subscribeBtn">Subscribe</button>
+
+    <script>
+        document.getElementById('subscribeBtn').addEventListener('click', function() {
+            // get the input values
+            const stockName = document.getElementById('stockName').value;
+            const parameter = document.getElementById('parameter').value;
+            const email = document.getElementById('email').value;
+
+            // construct the request data
+            const requestData = {
+                stockName: stockName,
+                parameter: parameter,
+                email: email
+            };
+
+            // Send a request to the service registry to get the provider URL for the specified service
+            fetch('http://54.174.175.123:8511/get_providers/Service102')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    // Use the first provider's IP as the server URL
+                    const serverUrl = data.providers[0].provider_ip;
+                    
+                    // Send POST request to subscribe to stock notifications
+                    fetch(`${serverUrl}/subscribe`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display subscription status on the page
+                        alert(data.message);
+                    })
+                    .catch(error => console.error('Error:', error));
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+    <p><a href="/">Back to home</a></p>
+</body>
+</html>
